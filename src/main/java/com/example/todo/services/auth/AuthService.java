@@ -11,6 +11,7 @@ import com.example.todo.repositories.roleRepositor.RoleRepository;
 import com.example.todo.repositories.user.UserRepository;
 import com.example.todo.services.JwtService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,13 +41,17 @@ public class AuthService {
 
         // Check if email or username already exists
         if (userRepository.existsByEmail(request.getUserEmail())) {
+            System.out.println("NOT Saving user: " + request);
+
             return ResponseEntity.badRequest().body(new ApiResponse<>(
                     "fail",
                     400,
                     "This email is already in use",
                     Collections.emptyMap()
             ));
+
         }
+
         Role userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
@@ -56,9 +61,21 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .roles(Set.of(userRole))
                 .build();
+        System.out.println("TRYING TO SAVE: " + request);
+
         System.out.println("Saving user: " + user);
 
-        userRepository.save(user);
+        try {
+            userRepository.save(user);
+        } catch (DataIntegrityViolationException e) {
+            // This handles rare race conditions where two requests pass the existsByEmail check at the same time
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse<>(
+                    "fail",
+                    409,
+                    "This email is already in use",
+                    Collections.emptyMap()
+            ));
+        }
 
         String  accessToken = jwtService.generateToken(user.getEmail());
         String  refreshToken = jwtService.generateRefreshToken(user.getEmail());

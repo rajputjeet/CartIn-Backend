@@ -42,13 +42,14 @@ public class User implements UserDetails {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
+    @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
     // Implementing methods for Spring Security (UserDetails)
-    @Override
-    public String getUsername() {
-        return this.email;  // Return the email for authentication
-    }
+//    @Override
+//    public String getUsername() {
+//        return this.email;  // Return the email for authentication
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
