@@ -1,14 +1,12 @@
-# Use a lightweight OpenJDK image
-FROM openjdk:17-jdk-slim
-
-# Set the working directory inside the container
+# ---- Build stage ----
+FROM gradle:8.5-jdk17-alpine AS build
 WORKDIR /app
+COPY . .
+RUN gradle build --no-daemon
 
-# Copy jar to the container
-COPY build/libs/*.jar app.jar
-
-# Expose the app port
+# ---- Run stage ----
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8080
-
-# Run the Spring Boot app
 ENTRYPOINT ["java", "-jar", "app.jar"]
