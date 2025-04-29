@@ -3,7 +3,7 @@ package com.example.todo.controllers.auth;
 import com.example.todo.dto.auth.AuthRequest;
 import com.example.todo.dto.AuthResponse;
 import com.example.todo.dto.auth.refreshToken.RefreshTokenRequest;
-import com.example.todo.entities.resonse.ApiResponse;
+import com.example.todo.entities.response.ApiResponse;
 import com.example.todo.services.auth.AuthService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

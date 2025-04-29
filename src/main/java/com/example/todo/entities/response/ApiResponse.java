@@ -1,4 +1,4 @@
-package com.example.todo.entities.resonse;
+package com.example.todo.entities.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

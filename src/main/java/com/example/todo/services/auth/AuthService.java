@@ -4,7 +4,7 @@ package com.example.todo.services.auth;
 import com.example.todo.dto.auth.AuthRequest;
 import com.example.todo.dto.AuthResponse;
 import com.example.todo.dto.auth.refreshToken.RefreshTokenRequest;
-import com.example.todo.entities.resonse.ApiResponse;
+import com.example.todo.entities.response.ApiResponse;
 import com.example.todo.entities.roles.Role;
 import com.example.todo.entities.user.User;
 import com.example.todo.repositories.roleRepositor.RoleRepository;

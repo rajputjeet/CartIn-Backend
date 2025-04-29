@@ -1,26 +1,11 @@
 version: "3.8"
 
 services:
-  postgres:
-    image: postgres:15
-    container_name: todo-postgres
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
-      - "6996:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    restart: unless-stopped
-
   todo-app:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: todo-app
-    depends_on:
-      - postgres
     environment:
       SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
       SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
@@ -28,6 +13,3 @@ services:
     ports:
       - "8080:8080"
     restart: unless-stopped
-
-volumes:
-  pgdata:

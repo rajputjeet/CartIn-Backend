@@ -48,3 +48,6 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+jar {
+	archiveFileName = 'app.jar'  // This will explicitly name the JAR file
+}
