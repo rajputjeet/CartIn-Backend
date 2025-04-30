@@ -10,7 +10,9 @@ import com.example.todo.repositories.categoriesRepository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HomeService {
@@ -24,28 +26,36 @@ public class HomeService {
 
     public HomeResponseDto getHome() {
 
-        List<BannersDto> banners = bannersRepository.findAll().stream()
-                .map(b -> new BannersDto(b.getId(), b.getBannerUrl())).toList();
-
-        List<CategoryDto> categories = categoryRepository.findAllWithProducts().stream()
-                .map(c -> new CategoryDto(c.getId(), c.getName(), c.getProductsList() != null ? c.getProductsList().stream()
-                        .map(p -> new ProductDto(p.getId(),
-                                p.getProductName(),
-                                p.getProductType(),
-                                p.getPrice(),
-                                p.getDiscountedPrice(),
-                                p.getDiscountPercent(),
-                                p.getRating(),
-                                p.getRatedBy(),
-                                p.isLiked()))
-                        .toList() : List.of()
-                        ))
+        List<BannersDto> banners = Optional.ofNullable(bannersRepository.findAll())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(b -> new BannersDto(b.getId(), b.getBannerUrl()))
                 .toList();
 
-        return new HomeResponseDto(
-                banners,
-                categories
-        );
+        List<CategoryDto> categories = Optional.ofNullable(categoryRepository.findAllWithProducts())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(c -> {
+                    List<ProductDto> products = Optional.ofNullable(c.getProductsList())
+                            .orElse(Collections.emptyList())
+                            .stream()
+                            .map(p -> new ProductDto(
+                                    p.getId(),
+                                    p.getProductName(),
+                                    p.getProductType(),
+                                    p.getPrice(),
+                                    p.getDiscountedPrice(),
+                                    p.getDiscountPercent(),
+                                    p.getRating(),
+                                    p.getRatedBy(),
+                                    p.isLiked(),
+                                    p.getCategory().getId()))
+                            .toList();
+                    return new CategoryDto(c.getId(), c.getName(), products);
+                })
+                .toList();
+
+        return new HomeResponseDto(banners, categories);
     }
 
 

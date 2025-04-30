@@ -31,7 +31,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         // Skip the filter for the registration and login endpoints
-        if (request.getRequestURI().startsWith("/auth/register") || request.getRequestURI().startsWith("/auth/login")) {
+        if (request.getRequestURI().startsWith("/auth/register") ||
+                request.getRequestURI().startsWith("/auth/login") ||
+                request.getRequestURI().startsWith("/admin/")
+        ) {
             filterChain.doFilter(request, response);
             return;
         }
