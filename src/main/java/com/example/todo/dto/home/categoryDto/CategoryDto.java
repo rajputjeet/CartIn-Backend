@@ -18,5 +18,10 @@ public class CategoryDto {
 
     @NotBlank(message = "Category is required")
     private String name;
+
     private List<ProductDto> products;
+
+    private List<CategoryDto> subCategories; // Recursive nesting
+
+
 }

@@ -17,6 +17,14 @@ public class Categories {
    private Long id;
 
    private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private Categories parentCategory;
+
+    @OneToMany(mappedBy = "parentCategory", cascade = CascadeType.ALL)
+    private List<Categories> subCategories;
+
    @OneToMany(mappedBy = "category",fetch = FetchType.LAZY)
    private List<Product> productsList;
 }

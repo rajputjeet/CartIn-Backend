@@ -2,6 +2,8 @@ package com.example.todo.services.admin;
 
 
 import com.example.todo.dto.home.banners.BannersDto;
+import com.example.todo.dto.home.categoryDto.CategoryDto;
+import com.example.todo.dto.home.categoryDto.subCategory.SubCategoryDto;
 import com.example.todo.dto.home.product.ProductDto;
 import com.example.todo.entities.banners.Banners;
 import com.example.todo.entities.categories.Categories;
@@ -33,11 +35,23 @@ public class AdminService {
         return bannersRepository.save(banner);
     }
 
-    public Categories createCategory(String name) {
+    public Categories createCategory(CategoryDto dto) {
         Categories category = new Categories();
-        category.setName(name);
+        category.setName(dto.getName());
         return categoryRepository.save(category);
     }
+
+    public Categories createSubCategory(SubCategoryDto dto) {
+        Categories parent = categoryRepository.findById(dto.getParentCategoryId())
+                .orElseThrow(() -> new EntityNotFoundException("Parent category not found"));
+
+        Categories subCategory = new Categories();
+        subCategory.setName(dto.getName());
+        subCategory.setParentCategory(parent);
+
+        return categoryRepository.save(subCategory);
+    }
+
 
     public Product createProduct(ProductDto dto) {
         Categories category = categoryRepository.findById(dto.getCategoryId()).orElseThrow(()->

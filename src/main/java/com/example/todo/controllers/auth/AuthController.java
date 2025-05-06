@@ -21,17 +21,17 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/register")
+    @PostMapping(value = "/register", consumes = {"application/json", "application/x-www-form-urlencoded" })
     public ResponseEntity<ApiResponse<?>> register(@RequestBody AuthRequest request) {
         return authService.register(request);
     }
 
-    @PostMapping("/login")
+    @PostMapping(value = "/login",  consumes = {"application/json", "application/x-www-form-urlencoded" })
     public ApiResponse<AuthResponse> login(@RequestBody AuthRequest request) {
         return authService.login(request);
     }
 
-    @PostMapping("/refresh-token")
+    @PostMapping(value = "/refresh-token", consumes = {"application/json", "application/x-www-form-urlencoded" })
     public ResponseEntity<ApiResponse<?>> refreshToken(@RequestBody RefreshTokenRequest request) {
         return authService.refreshToken(request);
     }
