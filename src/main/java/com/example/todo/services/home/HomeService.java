@@ -3,6 +3,7 @@ package com.example.todo.services.home;
 import com.example.todo.dto.home.HomeResponseDto;
 import com.example.todo.dto.home.banners.BannersDto;
 import com.example.todo.dto.home.categoryDto.CategoryDto;
+import com.example.todo.dto.home.categoryDto.subCategory.SubCategoryResponseDto;
 import com.example.todo.dto.home.product.ProductDto;
 import com.example.todo.entities.categories.Categories;
 import com.example.todo.entities.product.Product;
@@ -40,6 +41,16 @@ public class HomeService {
                 .toList();
 
         return new HomeResponseDto(banners, categories);
+    }
+
+    public List<SubCategoryResponseDto> getSubCategoriesByParent(Long parentId){
+
+        List<Categories> subcategories = categoryRepository.findSubcategoriesByParentId(parentId);
+
+        return subcategories.stream()
+                .map(c -> new SubCategoryResponseDto(c.getId(), c.getName()))
+                .toList();
+
     }
 
     private CategoryDto mapCategoryToDto(Categories category) {
